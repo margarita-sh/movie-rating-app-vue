@@ -1,5 +1,6 @@
 <script setup>
 import { StarIcon } from "@heroicons/vue/24/solid";
+import { ref } from 'vue';
 
 defineProps({
     movieProps: {
@@ -7,6 +8,15 @@ defineProps({
         required: true
     }
 })
+
+const currentIndx = ref(0);
+
+function setStars($event){
+  currentIndx.value = $event;
+  isDisabled.value = currentIndx.value === $event;
+}
+const disabledState = 'cursor-not-allowed text-gray-300';
+const enabledState = 'cursor-pointer';
 </script>
 
 <template>
@@ -25,12 +35,13 @@ defineProps({
       </div>
       <p class="text-sm text-gray-700 mb-3">{{ movieProps.description }}</p>
       <div class="flex items-center">
-        <span class="text-sm text-gray-600 mr-2">Rating: ({{ movieProps.rating }}/5)</span>
+        <span class="text-sm text-gray-600 mr-2">Rating: ({{ (currentIndx) > 0 ? (currentIndx) : 0 }}/5)</span>
           <StarIcon
             v-for="i in 5"
             :key="i"
             class="w-4 h-4"
-            :class="i <= movieProps.rating ? 'text-yellow-400' : 'text-gray-300'"
+            @click="setStars(i)"
+            :class="i <= currentIndx ? 'text-yellow-400' : 'text-gray-300', currentIndx === i ? disabledState : enabledState"
           />
       </div>
     </div>
