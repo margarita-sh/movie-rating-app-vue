@@ -1,5 +1,5 @@
 <script setup>
-import { StarIcon } from "@heroicons/vue/24/solid";
+import { StarIcon, TrashIcon, PencilIcon } from "@heroicons/vue/24/solid";
 import { ref } from 'vue';
 
 const { movieProps } = defineProps({
@@ -10,16 +10,26 @@ const { movieProps } = defineProps({
 })
 
 const currentIndx = ref(movieProps.rating);
+const hover = ref(false);
 
 function setStars($event) {
   currentIndx.value = $event;
 }
+function deleteItem() {
+  alert('Item deleted')
+}
+
+function editItem() {
+  alert('Item edited')
+}
+
 const disabledState = 'cursor-not-allowed text-gray-300';
 const enabledState = 'cursor-pointer';
 </script>
 
 <template>
-  <div :id="movieProps.id" class="bg-white rounded-lg shadow-md overflow-hidden m-4 w-96 h-auto">
+  <div :id="movieProps.id" class="bg-white rounded-lg shadow-md overflow-hidden m-4 w-96 h-auto relative" @mouseenter="hover = true" 
+    @mouseleave="hover = false">
     <div class="relative">
       <img :src="movieProps.image" alt="movie poster" class="w-full h-96 object-cover" />
       <div class="absolute top-0 right-0 w-16 h-16">
@@ -45,6 +55,17 @@ const enabledState = 'cursor-pointer';
         <StarIcon v-for="i in 5" :key="i" class="w-4 h-4" @click="setStars(i)"
           :class="i <= currentIndx ? 'text-yellow-400' : 'text-gray-300', currentIndx === i ? disabledState : enabledState" />
       </div>
+
+      <div v-if="hover" class="absolute bottom-4 right-4 flex gap-2">
+      <button @click="editMovie(movieIndex)" class="bg-gray-300 p-2 rounded-full shadow">
+        <PencilIcon class="w-4 h-4" />
+      </button>
+      <button @click="removeMovie(movieIndex)" class="bg-red-600 p-2 rounded-full text-white shadow">
+        <TrashIcon class="w-4 h-4" />
+      </button>
+    </div>
+
+
     </div>
   </div>
 </template>
