@@ -2,14 +2,14 @@
 import { StarIcon } from "@heroicons/vue/24/solid";
 import { ref } from 'vue';
 
-defineProps({
+const { movieProps } = defineProps({
   movieProps: {
     type: Object,
     required: true
   }
 })
 
-const currentIndx = ref(1);
+const currentIndx = ref(movieProps.rating);
 
 function setStars($event) {
   currentIndx.value = $event;
@@ -19,14 +19,14 @@ const enabledState = 'cursor-pointer';
 </script>
 
 <template>
-  <div :id="movieProps.id" class="bg-white rounded-lg shadow-md overflow-hidden w-72 m-4">
+  <div :id="movieProps.id" class="bg-white rounded-lg shadow-md overflow-hidden m-4 w-96 h-auto">
     <div class="relative">
       <img :src="movieProps.image" alt="movie poster" class="w-full h-96 object-cover" />
       <div class="absolute top-0 right-0 w-16 h-16">
         <div class="relative w-full h-full flex items-center justify-center">
           <StarIcon class="text-yellow-400 w-full h-full" />
           <span class="absolute text-yellow-800 font-bold text-sm">
-            {{ currentIndx }}
+            {{ currentIndx > 0 ? currentIndx : "-" }}
           </span>
         </div>
       </div>
@@ -41,7 +41,7 @@ const enabledState = 'cursor-pointer';
       </div>
       <p class="text-sm text-gray-700 mb-3">{{ movieProps.description }}</p>
       <div class="flex items-center">
-        <span class="text-sm text-gray-600 mr-2">Rating: ({{ (currentIndx) > 0 ? (currentIndx) : 1 }}/5)</span>
+        <span class="text-sm text-gray-600 mr-2">Rating: ({{ (currentIndx) > 0 ? (currentIndx) : "-" }}/5)</span>
         <StarIcon v-for="i in 5" :key="i" class="w-4 h-4" @click="setStars(i)"
           :class="i <= currentIndx ? 'text-yellow-400' : 'text-gray-300', currentIndx === i ? disabledState : enabledState" />
       </div>
