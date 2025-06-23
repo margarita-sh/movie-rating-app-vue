@@ -2,13 +2,19 @@
 import { reactive } from 'vue'
 
 const emit = defineEmits(['submit', 'cancel']);
+const { movie } = defineProps({
+  movie: {
+    type: Object,
+    required: true
+  }
+})
 
 const form = reactive({
-  name: '',
-  description: '',
-  image: '',
-  genres: ['drama', 'comedy', 'action', 'crime'],
-  inTheaters: false
+  name: movie ? movie.name : '',
+  description: movie ? movie.description : '',
+  image: movie ? movie.image : '',
+  genres: movie ? movie.genres : ['drama', 'comedy', 'action', 'crime'],
+  inTheaters: movie  ? movie.inTheaters : false
 });
 
 const errors = reactive({
@@ -72,7 +78,7 @@ function handleSubmit() {
             <div class="sm:flex sm:items-start">
 
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                <h3 class="text-base font-semibold text-gray-900" id="dialog-title">Add new movie</h3>
+                <h3 class="text-base font-semibold text-gray-900" id="dialog-title">{{ movie ? 'Edit Movie' : 'Add new movie'  }}</h3>
                 <div class="mt-2">
                   <p>Name:</p>
                   <input v-model="form.name" placeholder="please enter name"
@@ -95,9 +101,10 @@ function handleSubmit() {
                 </div>
 
                 <div class="mt-2">
-                  <p>Genres:</p>
-                  <textarea v-model="form.genres" placeholder="please enter genre(s)"
-                    class="w-full p-1 border border-gray-300 border-solid rounded" />
+                    <label for="genre">Genres:</label>
+                    <select class="py-3 px-4 pe-9 block w-full border border-gray-300 border-solid rounded focus:border-blue-500 focus:ring-blue-500" multiple>
+                      <option v-for="genre in form.genres" :key="value" :value="value">{{ genre }}</option>
+                    </select>
                     <span v-if="errors.genres" style="color:red">{{ errors.genres }}</span>
                 </div>
                 <div class="mt-2">
@@ -109,7 +116,7 @@ function handleSubmit() {
           </div>
           <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
             <button type="submit"
-              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Create</button>
+              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">{{movie ? 'Update' : 'Create'}}</button>
             <button type="button" @click="$emit('cancel')"
               class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
           </div>

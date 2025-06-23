@@ -8,6 +8,7 @@ const { movieProps } = defineProps({
     required: true
   }
 })
+const emit = defineEmits(['edit', 'remove'])
 
 const currentIndx = ref(movieProps.rating);
 const hover = ref(false);
@@ -15,12 +16,12 @@ const hover = ref(false);
 function setStars($event) {
   currentIndx.value = $event;
 }
-function deleteItem() {
-  alert('Item deleted')
+function removeMovie() {
+  emit('remove');
 }
 
-function editItem() {
-  alert('Item edited')
+function editMovie() {
+  emit('edit');
 }
 
 const disabledState = 'cursor-not-allowed text-gray-300';
@@ -57,10 +58,10 @@ const enabledState = 'cursor-pointer';
       </div>
 
       <div v-if="hover" class="absolute bottom-4 right-4 flex gap-2">
-      <button @click="editMovie(movieIndex)" class="bg-gray-300 p-2 rounded-full shadow">
+      <button @click="editMovie" class="bg-gray-300 p-2 rounded-full shadow">
         <PencilIcon class="w-4 h-4" />
       </button>
-      <button @click="removeMovie(movieIndex)" class="bg-red-600 p-2 rounded-full text-white shadow">
+      <button @click="removeMovie" class="bg-red-600 p-2 rounded-full text-white shadow">
         <TrashIcon class="w-4 h-4" />
       </button>
     </div>
